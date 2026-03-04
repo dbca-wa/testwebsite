@@ -1,3 +1,6 @@
+from random import random
+from time import sleep
+
 from bottle import Bottle, request, run, static_file, template
 
 app = application = Bottle()
@@ -54,6 +57,7 @@ def search_records(query: str):
             or q in r["description"].lower()
         )
 
+    sleep(random())  # Random delay
     return [r for r in RECORDS if hit(r)]
 
 
@@ -66,6 +70,7 @@ def index():
     """
     q = request.query.q or ""
     results = search_records(q) if q else []
+    sleep(random())  # Random delay
     return template("index", q=q, results=results)
 
 
@@ -75,6 +80,7 @@ def record_detail(record_id):
     Shows a single record's details
     """
     record = find_record_by_id(record_id)
+    sleep(random())  # Random delay
     if not record:
         return template("detail", record=None, record_id=record_id)
     return template("detail", record=record, record_id=record_id)
