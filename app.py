@@ -1,6 +1,6 @@
 from bottle import Bottle, request, run, static_file, template
 
-app = Bottle()
+app = application = Bottle()
 
 RECORDS = [
     {
@@ -86,5 +86,5 @@ def server_static(filepath):
 
 
 if __name__ == "__main__":
-    run(app, host="0.0.0.0", port=8080)
-    # run(app, host="0.0.0.0", port=8080, debug=True, reloader=True)
+    # Debug server
+    run(app, host="0.0.0.0", port=8080, debug=True, reloader=True)
