@@ -1,0 +1,47 @@
+# syntax=docker/dockerfile:1
+FROM python:3.13 AS builder_base
+
+ENV UV_LINK_MODE=copy \
+  UV_COMPILE_BYTECODE=1 \
+  UV_PYTHON_DOWNLOADS=never \
+  UV_PROJECT_ENVIRONMENT=/app/.venv
+
+COPY --from=ghcr.io/astral-sh/uv:0.9 /uv /uvx /bin/
+
+# Since there's no point in shipping lock files, we move them
+# into a directory that is NOT copied into the runtime image.
+# The trailing slash makes COPY create `/_lock/` automagically.
+WORKDIR /_lock
+COPY pyproject.toml uv.lock /_lock/
+
+# Synchronize dependencies.
+# This layer is cached until uv.lock or pyproject.toml change.
+RUN --mount=type=cache,target=/root/.cache uv sync --frozen \
+  # Remove uv and lockfile after use
+  && rm -rf /bin/uv \
+  && rm uv.lock
+
+##################################################################################
+
+FROM python:3.13
+LABEL org.opencontainers.image.authors=asi@dbca.wa.gov.au
+LABEL org.opencontainers.image.source=https://github.com/dbca-wa/testwebsite
+
+# Create a non-root user.
+RUN groupadd -r -g 1000 app \
+  && useradd -r -u 1000 -d /app -g app -N app
+
+WORKDIR /app
+COPY --from=builder_base --chown=app:app /app /app
+# Make sure we use the virtualenv by default
+ENV PATH="/app/.venv/bin:$PATH" \
+  # Run Python unbuffered:
+  PYTHONUNBUFFERED=1
+
+# Install the project.
+COPY gunicorn.py app.py pyproject.toml ./
+COPY static ./static
+COPY views ./views
+USER app
+EXPOSE 8080
+CMD ["gunicorn", "app", "--config", "gunicorn.py"]
