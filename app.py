@@ -101,6 +101,11 @@ def server_static(filepath):
     return static_file(filepath, root="./static")
 
 
+@app.get("/favicon.ico")
+def favicon():
+    return static_file("favicon.ico", root="static", mimetype="image/x-icon")
+
+
 if __name__ == "__main__":
     # Debug server
     run(app, host="0.0.0.0", port=8080, debug=True, reloader=True)
