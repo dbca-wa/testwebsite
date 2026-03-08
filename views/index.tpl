@@ -28,12 +28,12 @@
     <div class="results" id="id_search_results">
       <p><strong>Query:</strong> "{{q}}"</p>
       % if results:
-        % for r in results:
-          <div class="card" id="id_result_{{r['id']}}">
-            <h3 style="margin: 0.2rem 0;"><a id="id_url_detail_{{r['id']}}" class="a_url_detail" href="/record/{{r['id']}}">{{r["name"]}}</a></h3>
+        % for idx, r in enumerate(results, start=1):
+          <div class="card" id="id_result_{{idx}}">
+            <h3 style="margin: 0.2rem 0;"><a id="id_href_result_{{idx}}" class="a_url_detail" href="/record/{{r['id']}}">{{r["name"]}}</a></h3>
             <p style="margin: 0.2rem 0;">{{r["description"]}}</p>
             <p><img src="/static/{{r["filename"]}}" height="250"></p>
-            <p style="margin: 0.2rem 0;"><a href="/record/{{r['id']}}">View details →</a></p>
+            <p style="margin: 0.2rem 0;"><a href="/record/{{r['id']}}" class="a_url_detail">View details →</a></p>
           </div>
         % end
       % else:
