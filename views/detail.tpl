@@ -23,17 +23,17 @@
 <body>
   <p><a id="id_search" href="/">&larr; Back to search</a></p>
 
+  <div id="id_div_record_detail" class="card">
   % if record:
-    <div class="card">
-      <h1 style="margin: 0.2rem 0 0.6rem;">{{record["name"]}}</h1>
-      <p>{{record["description"]}}</p>
-      <p><img src="/static/{{record["filename"]}}"></p>
-      <div id="map"></div>
-    </div>
+    <h1 style="margin: 0.2rem 0 0.6rem;">{{record["name"]}}</h1>
+    <p>{{record["description"]}}</p>
+    <p><img src="/static/{{record["filename"]}}"></p>
+    <div id="map" class="map"></div>
   % else:
     <h1>Record not found</h1>
     <p>I couldn't find a record with ID <strong>{{record_id}}</strong>.</p>
   % end
+  </div>
 
   <script
     src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"
