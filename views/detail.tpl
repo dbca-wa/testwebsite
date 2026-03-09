@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>{{record["name"]}}</title>
+  % if record:
+    <title>{{record["name"]}}</title>
+  % else:
+    <title>Record not found</title>
+  % end
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link
     rel="stylesheet"
@@ -35,6 +39,7 @@
   % end
   </div>
 
+  % if record:
   <script
     src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"
     integrity="sha512-BwHfrr4c9kmRkLw6iXFdzcdWV/PGkVgiIyIWLLlTSXzWQzxuSg4DiQUCpauz/EWjgk5TYQqX/kvn9pG1NpYfqg=="
@@ -68,5 +73,6 @@
     attributionControl: false,
   });
   </script>
+  % end
 </body>
 </html>
